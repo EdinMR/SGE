@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="appTitle">ERP - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside id="sidebar" class="w-64 bg-white dark:bg-zinc-800 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full md:translate-x-0 z-50">
+            <div>
+                <div class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-10 text-center">
+                    <i class="fas fa-cube mr-2"></i><span id="storeNameDisplay">Mi Tienda</span>
+                </div>
+                <nav class="space-y-4">
+                    <a href="#dashboard" data-view="dashboard-view" class="nav-link flex items-center p-4 rounded-xl font-bold transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-home fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                    <a href="#sales" data-view="sales-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-cash-register fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Ventas</span>
+                    </a>
+                    <a href="#products" data-view="products-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-boxes fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Productos</span>
+                    </a>
+                    <a href="#clients" data-view="clients-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-users fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Clientes</span>
+                    </a>
+                    <a href="#cash" data-view="cash-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-wallet fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Caja</span>
+                    </a>
+                    <a href="#tools" data-view="tools-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-calculator fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Herramientas</span>
+                    </a>
+                    <a href="#settings" data-view="settings-view" class="nav-link flex items-center p-4 rounded-xl font-medium transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                        <i class="fas fa-cog fa-lg w-8 text-center"></i>
+                        <span class="ml-3">Ajustes</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="mt-10">
+                <div class="flex items-center p-4">
+                    <img src="assets/img/user-avatar.webp" alt="Avatar de Usuario" class="w-12 h-12 rounded-full mr-4 border-2 border-blue-400 dark:border-blue-600">
+                    <div>
+                        <div class="font-bold text-zinc-900 dark:text-zinc-100" id="userNameDisplay">Usuario</div>
+                        <div class="text-sm text-zinc-500 dark:text-zinc-400">Administrador</div>
+                    </div>
+                </div>
+                <button id="logoutButton" class="w-full text-left p-4 flex items-center justify-center font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 rounded-xl transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col p-8 overflow-y-auto">
+            
+            <header class="flex justify-between items-center mb-8 pb-4 border-b border-zinc-200 dark:border-zinc-700">
+                <div class="flex items-center">
+                    <button id="sidebarToggle" class="md:hidden text-zinc-600 dark:text-zinc-300 mr-4 focus:outline-none">
+                        <i class="fas fa-bars fa-xl"></i>
+                    </button>
+                    <h1 id="pageTitle" class="text-4xl font-extrabold">Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button id="themeToggle" class="p-3 rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors focus:outline-none">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="relative">
+                        <i class="fas fa-bell text-zinc-600 dark:text-zinc-300 cursor-pointer"></i>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">3</span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="views-container" class="flex-1">
+
+                <section id="dashboard-view" class="module-view">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex items-center justify-between">
+                            <div>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold">Ventas Hoy</p>
+                                <div class="text-4xl font-extrabold mt-2 flex items-baseline">
+                                    <span id="kpiSales" class="mr-2">S/. 0.00</span>
+                                </div>
+                            </div>
+                            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-full text-blue-600 dark:text-blue-300">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex items-center justify-between">
+                            <div>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold">Ganancia Neta</p>
+                                <div class="text-4xl font-extrabold mt-2 flex items-baseline">
+                                    <span id="kpiProfit" class="mr-2">S/. 0.00</span>
+                                </div>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-full text-green-600 dark:text-green-300">
+                                <i class="fas fa-dollar-sign fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex items-center justify-between">
+                            <div>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold">Productos Stock Bajo</p>
+                                <div class="text-4xl font-extrabold mt-2">
+                                    <span id="kpiLowStock">0</span>
+                                </div>
+                            </div>
+                            <div class="bg-red-100 dark:bg-red-900 p-4 rounded-full text-red-600 dark:text-red-300">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex items-center justify-between">
+                            <div>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold">Total Clientes</p>
+                                <div class="text-4xl font-extrabold mt-2">
+                                    <span id="kpiClients">0</span>
+                                </div>
+                            </div>
+                            <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-full text-purple-600 dark:text-purple-300">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex flex-col items-center">
+                            <h3 class="text-2xl font-bold mb-6 text-center">Ventas Semanales</h3>
+                            <div class="w-full max-w-full h-80">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex flex-col items-center">
+                            <h3 class="text-2xl font-bold mb-6 text-center">Rentabilidad vs. Costos</h3>
+                            <div class="w-full max-w-full h-80">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl">
+                        <h3 class="text-2xl font-bold mb-6">Registro de Actividad</h3>
+                        <ul id="activity-log" class="space-y-4">
+                            <li class="flex items-center space-x-4 p-4 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                                <span class="font-semibold">Venta #1234 completada.</span>
+                                <span class="text-zinc-500 dark:text-zinc-400">Hace 5 minutos.</span>
+                            </li>
+                            <li class="flex items-center space-x-4 p-4 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+                                <i class="fas fa-exclamation-circle text-yellow-500"></i>
+                                <span class="font-semibold">¡Stock bajo! Quedan 3 unidades de "Teclado Mecánico".</span>
+                                <span class="text-zinc-500 dark:text-zinc-400">Hace 1 hora.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="sales-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-6">Módulo de Ventas</h2>
+                    
+                    <div class="flex space-x-4 mb-8 border-b-2 border-zinc-200 dark:border-zinc-700">
+                        <button class="tab-btn active-tab-btn" data-tab="pos">
+                            <i class="fas fa-cash-register mr-2"></i> Punto de Venta (POS)
+                        </button>
+                        <button class="tab-btn" data-tab="history">
+                            <i class="fas fa-history mr-2"></i> Historial de Ventas
+                        </button>
+                    </div>
+
+                    <div id="pos-tab" class="tab-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div class="lg:col-span-2 bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex flex-col h-full">
+                                <h3 class="text-2xl font-bold mb-6">Catálogo de Productos</h3>
+                                <div class="relative mb-6">
+                                    <input type="text" id="pos-search" placeholder="Buscar por SKU o Nombre..." class="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow">
+                                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400"></i>
+                                </div>
+                                <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-auto pr-2 flex-grow">
+                                    <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl border border-zinc-100 dark:border-zinc-600 flex flex-col items-center justify-center text-center h-48 animate-pulse">
+                                        <i class="fas fa-box-open fa-3x text-zinc-400 mb-4"></i>
+                                        <span class="font-semibold text-zinc-400">Cargando...</span>
+                                    </div>
+                                    <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl border border-zinc-100 dark:border-zinc-600 flex flex-col items-center justify-center text-center h-48 animate-pulse">
+                                        <i class="fas fa-box-open fa-3x text-zinc-400 mb-4"></i>
+                                        <span class="font-semibold text-zinc-400">Cargando...</span>
+                                    </div>
+                                    <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl border border-zinc-100 dark:border-zinc-600 flex flex-col items-center justify-center text-center h-48 animate-pulse">
+                                        <i class="fas fa-box-open fa-3x text-zinc-400 mb-4"></i>
+                                        <span class="font-semibold text-zinc-400">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-1 bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl flex flex-col h-full">
+                                <h3 class="text-2xl font-bold mb-6">Carrito de Compras</h3>
+                                <div id="cart-items" class="flex-grow overflow-y-auto pr-2 space-y-4 mb-6">
+                                    <div class="text-center text-zinc-500 italic py-10">
+                                        <i class="fas fa-shopping-cart fa-3x mb-4"></i>
+                                        <p>El carrito está vacío. Agrega productos.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t border-zinc-200 dark:border-zinc-700 pt-6 space-y-4">
+                                    <div class="flex justify-between items-center text-xl font-semibold">
+                                        <span>Subtotal:</span>
+                                        <span id="cart-subtotal">S/. 0.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-lg text-zinc-500 dark:text-zinc-400">
+                                        <span>Impuestos (IGV):</span>
+                                        <span id="cart-tax">S/. 0.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-3xl font-extrabold text-blue-600 dark:text-blue-400">
+                                        <span>Total:</span>
+                                        <span id="cart-total">S/. 0.00</span>
+                                    </div>
+                                    <button id="process-sale-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-colors shadow-lg mt-6 text-xl">
+                                        <i class="fas fa-check-circle mr-2"></i> Procesar Venta
+                                    </button>
+                                    <button id="clear-cart-btn" class="w-full bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-900 dark:hover:bg-red-800 dark:text-red-300 font-bold py-3 rounded-xl transition-colors text-sm">
+                                        <i class="fas fa-trash-alt mr-1"></i> Vaciar Carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="history-tab" class="tab-content hidden">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold">Registro de Ventas</h3>
+                                <div class="relative">
+                                    <input type="text" id="sales-history-search" placeholder="Buscar venta..." class="pl-10 pr-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400"></i>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+                                    <thead class="bg-zinc-50 dark:bg-zinc-700">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">ID Venta</th>
+                                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Fecha</th>
+                                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Total</th>
+                                            <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-history-table-body" class="bg-white dark:bg-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-700">
+                                        <tr>
+                                            <td colspan="4" class="p-12 text-center text-zinc-500 dark:text-zinc-400 italic font-medium">No hay ventas registradas.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="products-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-6">Gestión de Productos</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl h-fit">
+                            <h3 class="text-2xl font-bold mb-6">Registrar/Editar Producto</h3>
+                            <form id="productForm" class="space-y-6">
+                                <div>
+                                    <label for="product-name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Nombre del Producto</label>
+                                    <input type="text" id="product-name" name="productName" placeholder="Laptop Gamer" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="product-sku" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">SKU / Código Único</label>
+                                    <input type="text" id="product-sku" name="productSku" placeholder="LAP-001" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="product-cost" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Costo (sin IGV)</label>
+                                        <input type="number" id="product-cost" name="productCost" step="0.01" min="0" placeholder="1000" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                    </div>
+                                    <div>
+                                        <label for="product-margin" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Margen (%)</label>
+                                        <input type="number" id="product-margin" name="productMargin" step="0.01" min="0" max="100" placeholder="30" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="product-price" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Precio de Venta</label>
+                                    <input type="number" id="product-price" name="productPrice" step="0.01" class="w-full p-3 rounded-lg bg-zinc-200 dark:bg-zinc-600 border border-zinc-300 dark:border-zinc-500 cursor-not-allowed" readonly>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="product-stock" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Stock Actual</label>
+                                        <input type="number" id="product-stock" name="productStock" min="0" placeholder="50" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                    </div>
+                                    <div>
+                                        <label for="product-min-stock" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Stock Mínimo</label>
+                                        <input type="number" id="product-min-stock" name="productMinStock" min="0" placeholder="10" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                    <button type="submit" id="saveProductBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg">Guardar Producto</button>
+                                    <button type="button" id="cancelEditBtn" class="flex-1 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-bold py-3 px-6 rounded-xl transition-colors hidden">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl overflow-x-auto h-fit">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold">Inventario</h3>
+                                <div class="relative">
+                                    <input type="text" id="product-search" placeholder="Buscar producto..." class="pl-10 pr-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400"></i>
+                                </div>
+                            </div>
+                            <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+                                <thead class="bg-zinc-50 dark:bg-zinc-700">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Nombre</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">SKU</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Costo</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Precio</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Stock</th>
+                                        <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table-body" class="bg-white dark:bg-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-700">
+                                    <tr>
+                                        <td colspan="6" class="p-12 text-center text-zinc-500 dark:text-zinc-400 italic font-medium">No hay productos registrados.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="clients-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-6">Gestión de Clientes</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl h-fit">
+                            <h3 class="text-2xl font-bold mb-6">Registrar/Editar Cliente</h3>
+                            <form id="clientForm" class="space-y-6">
+                                <div>
+                                    <label for="client-dni" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">DNI o Identificación</label>
+                                    <input type="text" id="client-dni" name="clientDni" placeholder="12345678" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="client-name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Nombre Completo</label>
+                                    <input type="text" id="client-name" name="clientName" placeholder="Juan Pérez" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="client-phone" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Teléfono</label>
+                                    <input type="tel" id="client-phone" name="clientPhone" placeholder="987654321" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="client-email" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Correo Electrónico</label>
+                                    <input type="email" id="client-email" name="clientEmail" placeholder="juan.perez@example.com" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                    <button type="submit" id="saveClientBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg">Guardar Cliente</button>
+                                    <button type="button" id="cancelClientEditBtn" class="flex-1 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-bold py-3 px-6 rounded-xl transition-colors hidden">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl overflow-x-auto h-fit">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold">Lista de Clientes</h3>
+                                <div class="relative">
+                                    <input type="text" id="client-search" placeholder="Buscar cliente..." class="pl-10 pr-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400"></i>
+                                </div>
+                            </div>
+                            <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+                                <thead class="bg-zinc-50 dark:bg-zinc-700">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Nombre</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Teléfono</th>
+                                        <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clients-table-body" class="bg-white dark:bg-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-700">
+                                    <tr>
+                                        <td colspan="4" class="p-12 text-center text-zinc-500 dark:text-zinc-400 italic font-medium">No hay clientes registrados.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="cash-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-6">Control de Caja</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl h-fit">
+                            <h3 class="text-2xl font-bold mb-6">Registrar Movimiento</h3>
+                            <form id="cashForm" class="space-y-6">
+                                <div>
+                                    <label for="cash-type" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Tipo de Movimiento</label>
+                                    <select id="cash-type" name="cashType" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                        <option value="in">Ingreso</option>
+                                        <option value="out">Egreso</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="cash-description" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Descripción</label>
+                                    <input type="text" id="cash-description" name="cashDescription" placeholder="Venta de productos, Pago de factura, etc." class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="cash-amount" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Monto</label>
+                                    <input type="number" id="cash-amount" name="cashAmount" step="0.01" min="0.01" placeholder="100.00" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg">Registrar Movimiento</button>
+                            </form>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl overflow-x-auto h-fit">
+                            <h3 class="text-2xl font-bold mb-6">Resumen de Caja</h3>
+                            <div class="mb-8">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-lg font-semibold">Saldo Actual:</span>
+                                    <span id="current-balance" class="text-2xl font-extrabold text-green-600 dark:text-green-400">S/. 0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Ingresos:</span>
+                                    <span id="total-in" class="text-sm font-semibold text-green-500 dark:text-green-300">S/. 0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Egresos:</span>
+                                    <span id="total-out" class="text-sm font-semibold text-red-500 dark:text-red-300">S/. 0.00</span>
+                                </div>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-6">Movimientos Recientes</h3>
+                            <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+                                <thead class="bg-zinc-50 dark:bg-zinc-700">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Fecha</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Tipo</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Descripción</th>
+                                        <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cash-table-body" class="bg-white dark:bg-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-700">
+                                    <tr>
+                                        <td colspan="4" class="p-12 text-center text-zinc-500 dark:text-zinc-400 italic font-medium">No hay movimientos registrados.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="tools-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-8">Herramientas Analíticas y Financieras</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold mb-6">Punto de Equilibrio</h3>
+                            <p class="text-zinc-500 dark:text-zinc-400 mb-6">Calcula la cantidad de unidades que necesitas vender para que tus ingresos totales sean iguales a tus costos totales.</p>
+                            <form id="breakEvenForm" class="space-y-6">
+                                <div>
+                                    <label for="fixed-costs" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Costos Fijos Totales (ej. alquiler, salarios)</label>
+                                    <input type="number" id="fixed-costs" step="0.01" min="0" placeholder="1000" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="price-per-unit" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Precio de Venta por Unidad</label>
+                                    <input type="number" id="price-per-unit" step="0.01" min="0.01" placeholder="50" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="variable-cost-per-unit" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Costo Variable por Unidad (ej. materia prima)</label>
+                                    <input type="number" id="variable-cost-per-unit" step="0.01" min="0" placeholder="20" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg">Calcular Punto de Equilibrio</button>
+                            </form>
+                            <div id="break-even-result" class="mt-8 p-6 bg-zinc-100 dark:bg-zinc-700 rounded-xl border border-zinc-200 dark:border-zinc-600 hidden">
+                                <h4 class="text-xl font-bold mb-4">Resultado del Cálculo</h4>
+                                <p class="text-zinc-700 dark:text-zinc-300"><i class="fas fa-chart-line text-green-500 mr-2"></i> Unidades para el Punto de Equilibrio: <span id="units-result" class="font-bold text-green-600 dark:text-green-400">--</span></p>
+                                <p class="text-zinc-700 dark:text-zinc-300 mt-2"><i class="fas fa-dollar-sign text-green-500 mr-2"></i> Ingresos Totales en el Punto de Equilibrio: <span id="revenue-result" class="font-bold text-green-600 dark:text-green-400">S/. --</span></p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold mb-6">Simulador de Ganancias</h3>
+                            <p class="text-zinc-500 dark:text-zinc-400 mb-6">Proyecta tus ganancias estimadas basándote en un volumen de ventas, costos y precios.</p>
+                            <form id="profitSimulatorForm" class="space-y-6">
+                                <div>
+                                    <label for="sim-units-sold" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Unidades Vendidas Estimadas</label>
+                                    <input type="number" id="sim-units-sold" min="1" placeholder="500" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="sim-price-per-unit" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Precio de Venta por Unidad</label>
+                                    <input type="number" id="sim-price-per-unit" step="0.01" min="0.01" placeholder="50" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="sim-variable-cost" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Costo Variable por Unidad</label>
+                                    <input type="number" id="sim-variable-cost" step="0.01" min="0" placeholder="20" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="sim-fixed-costs" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Costos Fijos Totales</label>
+                                    <input type="number" id="sim-fixed-costs" step="0.01" min="0" placeholder="1000" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg">Simular Ganancia</button>
+                            </form>
+                            <div id="profit-sim-result" class="mt-8 p-6 bg-zinc-100 dark:bg-zinc-700 rounded-xl border border-zinc-200 dark:border-zinc-600 hidden">
+                                <h4 class="text-xl font-bold mb-4">Resultado de la Simulación</h4>
+                                <p class="text-zinc-700 dark:text-zinc-300"><i class="fas fa-hand-holding-usd text-green-500 mr-2"></i> Ingresos Totales: <span id="sim-revenue-result" class="font-bold text-green-600 dark:text-green-400">S/. --</span></p>
+                                <p class="text-zinc-700 dark:text-zinc-300"><i class="fas fa-file-invoice-dollar text-red-500 mr-2"></i> Costos Totales: <span id="sim-total-cost-result" class="font-bold text-red-600 dark:text-red-400">S/. --</span></p>
+                                <p class="text-zinc-700 dark:text-zinc-300 mt-2"><i class="fas fa-piggy-bank text-yellow-500 mr-2"></i> Ganancia Neta: <span id="sim-net-profit-result" class="font-bold">S/. --</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="settings-view" class="module-view hidden">
+                    <h2 class="text-3xl font-bold mb-6">Ajustes y Personalización</h2>
+                    <div class="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-xl grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div>
+                            <h3 class="text-2xl font-bold text-zinc-800 dark:text-zinc-200 mb-6">Preferencias Generales</h3>
+                            <div class="space-y-8">
+                                <div>
+                                    <label for="storeNameInput" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Nombre de la Tienda</label>
+                                    <div class="flex items-center">
+                                        <input type="text" id="storeNameInput" placeholder="Mi Tienda" class="flex-1 p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <button id="saveStoreNameBtn" class="ml-4 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md">Guardar</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="currencyInput" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Símbolo de Moneda</label>
+                                    <div class="flex items-center">
+                                        <input type="text" id="currencyInput" placeholder="S/." class="flex-1 p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <button id="saveCurrencyBtn" class="ml-4 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md">Guardar</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="languageSelect" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Idioma</label>
+                                    <select id="languageSelect" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <option value="es">Español (ES)</option>
+                                        <option value="en">English (EN)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="dateFormatSelect" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Formato de Fecha y Hora</label>
+                                    <select id="dateFormatSelect" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                        <option value="dd/mm/yyyy">DD/MM/YYYY (25/06/2025)</option>
+                                        <option value="mm/dd/yyyy">MM/DD/YYYY (06/25/2025)</option>
+                                        <option value="yyyy-mm-dd">YYYY-MM-DD (2025-06-25)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Tema Visual</h4>
+                                    <div class="flex items-center space-x-6">
+                                        <div class="flex items-center">
+                                            <input type="radio" id="theme-light" name="theme" value="light" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                            <label for="theme-light" class="text-zinc-700 dark:text-zinc-300"><i class="fas fa-sun mr-1"></i> Modo Claro</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="radio" id="theme-dark" name="theme" value="dark" class="mr-2 text-blue-600 focus:ring-blue-500">
+                                            <label for="theme-dark" class="text-zinc-700 dark:text-zinc-300"><i class="fas fa-moon mr-1"></i> Modo Oscuro</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold text-zinc-800 dark:text-zinc-200 mb-6">Seguridad e Integraciones</h3>
+                            <div class="space-y-8">
+                                <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl">
+                                    <h4 class="text-xl font-bold mb-4">Cambiar Contraseña</h4>
+                                    <form id="changePasswordForm" class="space-y-4">
+                                        <div>
+                                            <label for="current-password" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Contraseña Actual</label>
+                                            <input type="password" id="current-password" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-600 border border-zinc-200 dark:border-zinc-500 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                        </div>
+                                        <div>
+                                            <label for="new-password" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Nueva Contraseña</label>
+                                            <input type="password" id="new-password" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-600 border border-zinc-200 dark:border-zinc-500 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                        </div>
+                                        <div>
+                                            <label for="confirm-password" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Confirmar Nueva Contraseña</label>
+                                            <input type="password" id="confirm-password" class="w-full p-3 rounded-lg bg-zinc-100 dark:bg-zinc-600 border border-zinc-200 dark:border-zinc-500 focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                                        </div>
+                                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md">Actualizar Contraseña</button>
+                                    </form>
+                                </div>
+                                <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl">
+                                    <h4 class="text-xl font-bold mb-4">Configuración de Notificaciones</h4>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <label for="notif-stock" class="text-zinc-700 dark:text-zinc-300">Alertas de Stock Bajo</label>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notif-stock" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label for="notif-sales" class="text-zinc-700 dark:text-zinc-300">Resumen de Ventas Diarias</label>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notif-sales">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-zinc-50 dark:bg-zinc-700 p-6 rounded-xl">
+                                    <h4 class="text-xl font-bold mb-4">Integraciones</h4>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-file-invoice-dollar text-green-500"></i>
+                                            <span class="text-zinc-700 dark:text-zinc-300">Software de Contabilidad</span>
+                                        </div>
+                                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1 rounded-full font-bold">Conectar</button>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-envelope-open-text text-red-500"></i>
+                                            <span class="text-zinc-700 dark:text-zinc-300">Servicio de Email Marketing</span>
+                                        </div>
+                                        <button class="bg-gray-500 text-white text-sm px-4 py-1 rounded-full font-bold cursor-not-allowed" disabled>Conectar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="auth/auth.js"></script>
+    <script src="components/sidebar.js"></script>
+    <script src="components/navbar.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/chart-renderer.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/sales.js"></script>
+    <script src="js/clients.js"></script>
+    <script src="js/cash.js"></script>
+    <script src="js/tools.js"></script> <script src="js/main.js"></script>
+</body>
+</html>
